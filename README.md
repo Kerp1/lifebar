@@ -11,7 +11,7 @@ _Configuration_
 
 The file *lifebarrc.example* is well annotated and contains all the available
 configuration options. Configuration files should be saved/linked
-to *~/.lifebarrc* to be read by lifebar. An alternative lifebarrc example is provided
+to *~/.config/lifebar/config* to be read by lifebar. An alternative lifebarrc example is provided
 in *lifebarrc.example-highres* that is more suitable for high-resolution monitors (3K+).
 
 _Features_
