@@ -151,17 +151,17 @@ int render_battery(cairo_t *c, int x, int y, struct batt_info *b, int d) {
 	char k_string[32];
 	char v_string[32];
 
-	sprintf(k_string, "batt-%d", b->index);
+	sprintf(k_string, "Battery: ", b->index);
 
 	switch(b->status) {
 		case CHARGING:
-			sprintf(v_string, "charging %d%%", b->percent);
+			sprintf(v_string, "\xe2\x86\x91%d%%", b->percent);
 			break;
 		case DISCHARGING:
-			sprintf(v_string, "discharging %d%%", b->percent);
+			sprintf(v_string, "\xe2\x86\x93%d%%", b->percent);
 			break;
 		case FULL:
-			sprintf(v_string, "full", b->index);
+			sprintf(v_string, "100%%", b->index);
 			break;
 		case UNKNOWN:
 			sprintf(v_string, "idle %d%%", b->percent);
