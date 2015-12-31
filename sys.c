@@ -165,3 +165,37 @@ void read_net_speed(char *ifname, struct net_speed_info *net) {
         fclose(f);
     }
 }
+
+void read_net_info(char *ifname, struct net_info *net) {
+	FILE *file;
+	char path[512];
+
+	file = popen("/usr/bin/iw wlo1 link", "r");
+	if(file == NULL) {
+		fprintf(stderr, "%sCouldn't execute iw command '%s'\n",
+			BAD_MSG, NULL);
+
+		strncpy(net->name, "Error", 6);
+		strncpy(net->signal_level, "0", 2);
+
+		return;
+	}
+
+
+	while(fgets(path, sizeof(path) - 1, file) != NULL) {
+		if(strstr(path, "SSID: ") != NULL) {
+			int ssid_length = strlen(path) - 7;
+
+			strncpy(net->name, path + 7, ssid_length);
+			strncpy(net->name + ssid_length - 1, "\0", 1);
+		} else if(strstr(path, "signal:") != NULL) {
+			int signal_length = 3;
+
+			strncpy(net->signal_level, path + 9, signal_length);
+			strncpy(net->signal_level + signal_length, "\0", 1);
+		} else if(strstr(path, "Not connected") != NULL) {
+			strncpy(net->name, "Down", 5);
+			strncpy(net->signal_level, "0", 2);
+		}
+	}
+}

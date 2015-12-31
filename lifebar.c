@@ -548,6 +548,7 @@ int main(int argc, char *argv[]) {
 		struct ifaddrs *iftwo = NULL;
 		struct net_speed_info ifone_speed[NET_SPEED_AVERAGE];
 		struct net_speed_info iftwo_speed[NET_SPEED_AVERAGE];
+		struct net_info ifone_info;
 		uint32_t if_speed_index = 0;
 		//TODO we should print these arrays with suitable values or ignore
 		//zero values in render_interface(), to prevent extreme values for
@@ -647,6 +648,9 @@ int main(int argc, char *argv[]) {
 
 						ifap = ifap->ifa_next;
 					}
+
+
+					read_net_info("wlo1", &ifone_info);
 
 					//read interface speed
 					if(ifone != NULL)
@@ -967,6 +971,17 @@ int main(int argc, char *argv[]) {
 								if(ptr->next != NULL) {
 									//divider
 									trpadding += render_divider(ins->cairo,
+											ins->output->width - trpadding, RIGHT);
+								}
+							} else if(strcmp(module, "ifinfo") == 0) {
+								//ifinfo
+								trpadding += render_interface_info(ins->cairo, 
+											ins->output->width - trpadding, 
+											textheight, ifone_info, RIGHT);
+
+								if(ptr->next != NULL) {
+									//divider
+									trpadding += render_divider(ins->cairo, 
 											ins->output->width - trpadding, RIGHT);
 								}
 							} else if(strcmp(module, "ifone") == 0) {

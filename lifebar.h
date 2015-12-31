@@ -97,7 +97,7 @@
 // the valid configuration options for the config key 'modules' which does
 // not have any suffix.
 static char **valid_static = (char *[]){"fsone", "fstwo", "extip", "ifone", 
-				"iftwo", "date", "time", "uptime", NULL};
+				"iftwo", "date", "time", "uptime", "ifinfo", NULL};
 
 // the valid configuration options for the config key 'modules' which does
 // have a suffix like bat0 or therm1.
@@ -118,6 +118,11 @@ struct thermal_info {
 struct net_speed_info {
 	uint64_t down_bytes;			//these are just current totals, we have to
 	uint64_t up_bytes;				//compare to previous readings for speed
+};
+
+struct net_info {
+	char name[64];				//SSID of the network
+	char signal_level[4]; 	//The signal level in dB
 };
 
 struct i3_output {
@@ -286,6 +291,9 @@ int render_date(cairo_t *, int, int, int);
 int render_interface(cairo_t *, int, int, struct ifaddrs *,
 			struct net_speed_info[], uint32_t, int);
 
+int render_interface_info(cairo_t *, int, int,
+						struct net_info, int);
+
 int render_filesystem(cairo_t *, int, int, struct statvfs *, char *, int);
 
 int render_battery(cairo_t *, int, int, struct batt_info *, int);
@@ -295,5 +303,7 @@ int render_thermal(cairo_t *, int, int, struct thermal_info *, int);
 int render_keyvalue(cairo_t *, int, int, char *, char *, int);
 
 void read_net_speed(char *, struct net_speed_info *);
+
+void read_net_info(char *, struct net_info *);
 
 size_t curl_writeback(void *, size_t, size_t, void *);
