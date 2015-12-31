@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
 		conf->wswrap = WSWRAP_OFF;
 		strcpy(conf->ifone, "eth0");
 		strcpy(conf->iftwo, "");
+		strcpy(conf->ifinfo, "wlo1");
 		strcpy(conf->fsone, "/home");
 		strcpy(conf->fstwo, "");
 		conf->alarm_increment_s = 300;
@@ -198,6 +199,8 @@ int main(int argc, char *argv[]) {
 							strcpy(conf->ifone, value);
 						else if(strcmp(key, "iftwo") == 0)
 							strcpy(conf->iftwo, value);
+						else if(strcmp(key, "ifinfo") == 0)
+							strcpy(conf->ifinfo, value);
 						else if(strcmp(key, "fsone") == 0)
 							strcpy(conf->fsone, value);
 						else if(strcmp(key, "fstwo") == 0)
@@ -650,7 +653,7 @@ int main(int argc, char *argv[]) {
 					}
 
 
-					read_net_info("wlo1", &ifone_info);
+					read_net_info(conf->ifinfo, &ifone_info);
 
 					//read interface speed
 					if(ifone != NULL)

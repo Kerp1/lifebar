@@ -169,10 +169,19 @@ void read_net_speed(char *ifname, struct net_speed_info *net) {
 void read_net_info(char *ifname, struct net_info *net) {
 	FILE *file;
 	char path[512];
+	char first[] = "/usr/bin/iw dev ";
+	char last[] = " link\n";
+	char cmd[64];
 
-	file = popen("/usr/bin/iw wlo1 link", "r");
+	//Create command to run, has the structure [first] + ifname + [last] + \0"
+	strncpy(cmd, first, strlen(first));
+	strncpy(cmd + strlen(first), ifname, strlen(ifname));
+	strncpy(cmd + strlen(first) + strlen(ifname), last, strlen(last));
+	strncpy(cmd + strlen(first) + strlen(ifname) + strlen(last), "\0", 1);
+
+	file = popen(cmd, "r");
 	if(file == NULL) {
-		fprintf(stderr, "%sCouldn't execute iw command '%s'\n",
+		fprintf(stderr, "%sCouldn't execute iw command\n",
 			BAD_MSG, NULL);
 
 		strncpy(net->name, "Error", 6);
@@ -181,21 +190,22 @@ void read_net_info(char *ifname, struct net_info *net) {
 		return;
 	}
 
-
 	while(fgets(path, sizeof(path) - 1, file) != NULL) {
 		if(strstr(path, "SSID: ") != NULL) {
 			int ssid_length = strlen(path) - 7;
 
 			strncpy(net->name, path + 7, ssid_length);
 			strncpy(net->name + ssid_length - 1, "\0", 1);
+
 		} else if(strstr(path, "signal:") != NULL) {
 			int signal_length = 3;
 
 			strncpy(net->signal_level, path + 9, signal_length);
 			strncpy(net->signal_level + signal_length, "\0", 1);
+
 		} else if(strstr(path, "Not connected") != NULL) {
 			strncpy(net->name, "Down", 5);
 			strncpy(net->signal_level, "0", 2);
-		}
+		} 
 	}
 }

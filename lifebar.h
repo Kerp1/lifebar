@@ -202,6 +202,7 @@ struct config {
 	uint32_t wswrap;				//whether wsmousewheel wraps WSWRAP_ON/OFF
 	char ifone[32];					//interface name, eg eth0
 	char iftwo[32];					//interface name, eg eth0
+	char ifinfo[32];					//interface name, eg eth0
 	char fsone[32];					//fs location, eg /home
 	char fstwo[32];					//fs location, eg /home
 	uint32_t alarm_increment_s;		//alarm increment in seconds eg 300
