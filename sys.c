@@ -244,6 +244,13 @@ void get_alsa_master_info(struct volume_info *info)
     snd_mixer_selem_id_set_name(sid, selem_name);
     snd_mixer_elem_t* elem = snd_mixer_find_selem(handle, sid);
 
+    if(elem == NULL) {
+      info->volume_percent = 999;
+      info->is_muted = 0;
+      snd_mixer_close(handle);
+      return;
+    }
+
     snd_mixer_selem_get_playback_volume_range(elem, &min, &max);
     snd_mixer_selem_get_playback_volume (elem, SND_MIXER_SCHN_MONO, &volume);
 
