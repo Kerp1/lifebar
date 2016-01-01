@@ -1,4 +1,4 @@
-CFLAGS=`pkg-config --cflags --libs x11 xft cairo` -lcurl -g
+CFLAGS=`pkg-config --cflags --libs x11 xft cairo alsa` -lcurl -g
 CC=/usr/bin/gcc
 
 all:

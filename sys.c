@@ -1,5 +1,8 @@
 #include "lifebar.h"
 
+#include <alsa/asoundlib.h>
+#include <math.h>
+
 #define PS_PATH "/sys/class/power_supply"
 #define TH_PATH "/sys/class/thermal"
 #define NET_PATH "/sys/class/net"
@@ -208,4 +211,46 @@ void read_net_info(char *ifname, struct net_info *net) {
 			strncpy(net->signal_level, "0", 2);
 		} 
 	}
+}
+
+int is_muted(snd_mixer_elem_t *elem) {
+	int value = 0;
+
+	if (snd_mixer_selem_has_playback_switch(elem)) {
+        snd_mixer_selem_get_playback_switch(elem, SND_MIXER_SCHN_MONO, &value);
+    }
+	//The value returned indicates whether the switch is not muted, so we have to reverse it.
+   value = value ? 0 : 1;
+	return value;
+}
+
+void get_alsa_master_info(struct volume_info *info)
+{
+    long min, max;
+    long volume;
+    snd_mixer_t *handle;
+    snd_mixer_selem_id_t *sid;
+    const char *card = "default";
+    const char *selem_name = "Master";
+
+    snd_mixer_open(&handle, 0);
+    snd_mixer_attach(handle, card);
+    snd_mixer_selem_register(handle, NULL, NULL);
+    snd_mixer_load(handle);
+
+    snd_mixer_selem_id_alloca(&sid);
+    snd_mixer_selem_id_set_index(sid, 0);
+    snd_mixer_selem_id_set_name(sid, selem_name);
+    snd_mixer_elem_t* elem = snd_mixer_find_selem(handle, sid);
+
+    snd_mixer_selem_get_playback_volume_range(elem, &min, &max);
+    snd_mixer_selem_get_playback_volume (elem, SND_MIXER_SCHN_MONO, &volume);
+
+    float percent = (volume / (float)max) * 100;
+
+
+    info->volume_percent = (int)percent;
+    info->is_muted = is_muted(elem);
+
+    snd_mixer_close(handle);
 }

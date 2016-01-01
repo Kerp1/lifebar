@@ -567,6 +567,7 @@ int main(int argc, char *argv[]) {
 		char wanip[128];
 		uint32_t alarm_s = 0; //time to alarm, in seconds
 		struct sysinfo sinfo;	//sysinfo container, used for uptime
+		struct volume_info vol_info;
 
 		//ready the curl handle for external ip lookup
 		CURL *ipe_curl;
@@ -654,6 +655,7 @@ int main(int argc, char *argv[]) {
 
 
 					read_net_info(conf->ifinfo, &ifone_info);
+					get_alsa_master_info(&vol_info);
 
 					//read interface speed
 					if(ifone != NULL)
@@ -1088,6 +1090,17 @@ int main(int argc, char *argv[]) {
 										}
 									}
 								}
+							} else if(strncmp("volinfo", module, strlen("volinfo")) == 0) {
+								trpadding += render_volume(ins->cairo, 
+											ins->output->width - trpadding,
+											textheight, vol_info, RIGHT);
+
+								if(ptr->next != NULL) {
+											//divider
+											trpadding += render_divider(ins->cairo,
+													ins->output->width - trpadding, RIGHT);
+										}
+
 							} else if(strcmp(module, "uptime") == 0) {
 								// uptime
 								uint32_t ut = sinfo.uptime;

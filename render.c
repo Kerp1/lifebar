@@ -213,6 +213,17 @@ int render_time(cairo_t *cairo, int x, int y, int d) {
 	return extents.width - 1;
 }
 
+int render_volume(cairo_t *cairo, int x, int y, struct volume_info vol_info, int d) {
+	char k_string[32];
+	char v_string[32];
+
+	sprintf(k_string, "Vol: ");
+	sprintf(v_string, "%d%%", vol_info.volume_percent);
+
+	return render_keyvalue(cairo, x, y, k_string, v_string, d);
+
+}
+
 int render_alarm(cairo_t *cairo, uint32_t alarm_s, int x, int y, int d) {
 	struct tm *atm = malloc(sizeof *atm);
 	memset(atm, 0, sizeof *atm);
