@@ -211,6 +211,7 @@ void read_net_info(char *ifname, struct net_info *net) {
          strncpy(net->signal_level, "0", 2);
       } 
    }
+   pclose(file);
 }
 
 int is_muted(snd_mixer_elem_t *elem) {
