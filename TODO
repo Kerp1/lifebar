@@ -13,12 +13,12 @@ smooth inet speed reporting
 figure out why external_ip disappears sometimes
 
 modules:
-	cpu usage
-	ram usage
-	wifi signal strength
-	alsa/pulse volumes
-	vpn status
-	arp cache watch
-	mailbox
-	weather
+   cpu usage
+   ram usage
+   wifi signal strength
+   alsa/pulse volumes
+   vpn status
+   arp cache watch
+   mailbox
+   weather
 
