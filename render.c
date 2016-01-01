@@ -220,7 +220,7 @@ int render_volume(cairo_t *cairo, int x, int y, struct volume_info vol_info, int
    sprintf(k_string, "\u266a: ");
 
    if(vol_info.is_muted) {
-      sprintf(v_string, "Mz");
+      sprintf(v_string, "M");
    } else {
       sprintf(v_string, "%d%%", vol_info.volume_percent);
    }
