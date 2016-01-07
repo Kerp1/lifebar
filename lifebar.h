@@ -88,7 +88,7 @@
 
 //how often in seconds do we perform the expensive lookups
 //NOTE: currently this is used to decrement alarm, so it should stay at 1
-#define EXPENSIVE_TIME 1
+#define EXPENSIVE_TIME 10
 //ping our external ip every x seconds, 300 = 5 minutes
 #define EXTERNAL_IP_TIME 300
 //how many readings (1 per second) do we average net speed over
