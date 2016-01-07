@@ -655,7 +655,6 @@ int main(int argc, char *argv[]) {
 
 
                read_net_info(conf->ifinfo, &ifone_info);
-               get_alsa_master_info(&vol_info);
 
                //read interface speed
                if(ifone != NULL)
@@ -721,6 +720,8 @@ int main(int argc, char *argv[]) {
             
             //grab the latest sysinfo struct
             sysinfo(&sinfo);
+
+            get_alsa_master_info(&vol_info);
 
             //check the event buffer for incoming events
             int mouse_clicked = 0;
