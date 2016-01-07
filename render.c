@@ -163,13 +163,16 @@ int render_battery(cairo_t *c, int x, int y, struct batt_info *b, int d) {
    char v_string[32];
 
    sprintf(k_string, "Battery: ", b->index);
+   char time_left[64];
+   strncpy(time_left, b->time_left + 1, 4);
+
 
    switch(b->status) {
       case CHARGING:
-         sprintf(v_string, "\xe2\x86\x91%d%%", b->percent);
+         sprintf(v_string, "\xe2\x86\x91%d%% %s", b->percent, time_left);
          break;
       case DISCHARGING:
-         sprintf(v_string, "\xe2\x86\x93%d%%", b->percent);
+         sprintf(v_string, "\xe2\x86\x93%d%% %s", b->percent, time_left);
          break;
       case FULL:
          sprintf(v_string, "100%%", b->index);
