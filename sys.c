@@ -55,6 +55,8 @@ int get_battery_state(char* state) {
     return CHARGING;
   } else if(strstr(state, "Discharging") != NULL) {
     return DISCHARGING;
+  } else if(strstr(state, "Full") != NULL) {
+    return FULL;
   } else {
     return UNKNOWN;
   }
@@ -66,7 +68,7 @@ void read_acpi_battery(int b, struct batt_info *bi) {
   char buffer[128];
   FILE *file;
   regex_t regex;
-  regcomp(&regex, "Battery ([0-9]): (.+?), ([0-9]+)., (.{2}:.{2}:.{2}) ", REG_EXTENDED);
+  regcomp(&regex, "Battery ([0-9]): (.+?), (([0-9]+).*(.{2}:.{2}:.{2})){0,1}", REG_EXTENDED);
 
   size_t ngroups = regex.re_nsub + 1;
   regmatch_t *groups = malloc(ngroups * sizeof(regmatch_t));
@@ -99,11 +101,6 @@ void read_acpi_battery(int b, struct batt_info *bi) {
       }
     }
 
-    if(nmatched != ngroups) {
-      fprintf(stderr, "%sCould not match string: '%s'\n",
-      BAD_MSG, command_output);
-    }
-
     get_match_string(buffer, &groups[1], command_output);
     bi->index = strtol(buffer, NULL, 10);
 
@@ -113,8 +110,11 @@ void read_acpi_battery(int b, struct batt_info *bi) {
     get_match_string(buffer, &groups[3], command_output);
     bi->percent = strtol(buffer, NULL, 10);
 
-    get_match_string(buffer, &groups[4], command_output);
-    strcpy(bi->time_left, buffer);
+    //The time isn't always printed by acpi.
+    if(nmatched > 5) {
+      get_match_string(buffer, &groups[5], command_output);
+      strcpy(bi->time_left, buffer);
+    }
 
     regfree(&regex);
   }
