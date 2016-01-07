@@ -104,10 +104,10 @@ static char **valid_static = (char *[]){"fsone", "fstwo", "extip", "ifone",
 static char **valid_suffix = (char *[]){"bat", "therm", NULL};
 
 struct batt_info {
-   uint32_t index;               //battery number, as in BAT0
+   uint32_t index;            //battery number, as in BAT0
    uint32_t percent;          //how full the battery is 0-100 inc
    uint32_t status;           //CHARGING DISCHARGING FULL EMPTY
-   uint32_t time;             //how long until FULL/EMPTY in seconds
+   char time_left[64];        //how long until FULL/EMPTY in the format hh:mm:ss
 };
 
 struct thermal_info {

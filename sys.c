@@ -2,6 +2,7 @@
 
 #include <alsa/asoundlib.h>
 #include <math.h>
+#include <regex.h>
 
 #define PS_PATH "/sys/class/power_supply"
 #define TH_PATH "/sys/class/thermal"
@@ -43,74 +44,81 @@ int count_acpi_thermal() {
    return count;
 }
 
+void get_match_string(char *buffer, regmatch_t* match, char *str) {
+  size_t size = match->rm_eo - match->rm_so;
+  strncpy(buffer, str + match->rm_so, size);
+  buffer[size] = '\0';
+}
+
+int get_battery_state(char* state) {
+  if(strstr(state, "Charging") != NULL) {
+    return CHARGING;
+  } else if(strstr(state, "Discharging") != NULL) {
+    return DISCHARGING;
+  } else {
+    return UNKNOWN;
+  }
+}
+
 void read_acpi_battery(int b, struct batt_info *bi) {
-   //save the index 
-   bi->index = b;
+  char cmd[] = "acpi";
+  char command_output[512];
+  char buffer[128];
+  FILE *file;
+  regex_t regex;
+  regcomp(&regex, "Battery ([0-9]): (.+?), ([0-9]+)., (.{2}:.{2}:.{2}) ", REG_EXTENDED);
 
-   //we assume the battery index to exist as filename BAT<index>
-   char path[128];
-   FILE *f;
+  size_t ngroups = regex.re_nsub + 1;
+  regmatch_t *groups = malloc(ngroups * sizeof(regmatch_t));
 
-   //status
-   char status[2];
-   sprintf(path, "%s/BAT%d/status", PS_PATH, b);
-   f = fopen(path, "r");
-   if(f == NULL || fgets(status, 2, f) == NULL) {
-      fprintf(stderr, "%scould not read battery status: '%s'\n",
-            BAD_MSG, path);
+  file = popen(cmd, "r");
+  if(file == NULL) {
+    fprintf(stderr, "%sCouldn't execute acpi command\n", BAD_MSG, NULL);
+
+    bi->index = 0;
+    bi->percent = 20;
+    bi->status = UNKNOWN;
+
+    return;
+  }
+  
+  while(fgets(command_output, sizeof(command_output) - 1, file) != NULL) {
+    int ret = regexec(&regex, command_output, ngroups, groups, 0);
+
+    if(ret != 0) {
+      bi->index = 0;
+      bi->percent = 0;
       bi->status = UNKNOWN;
-   }
-   else {
-      switch(status[0]) {
-         case 'C': bi->status = CHARGING; break;
-         case 'D': bi->status = DISCHARGING; break;
-         case 'F': bi->status = FULL; break;
-         default: bi->status = UNKNOWN;
+      return;
+    }
+    //Calculate the number of match groups.
+    size_t nmatched;
+    for(nmatched = 0; nmatched < ngroups; ++nmatched) {
+      if(groups[nmatched].rm_so == -1) {
+        break;
       }
-        fclose(f);
-   }
-
-   //energy when full
-   char energy_full_s[32];
-   long int energy_full = 0;
-   sprintf(path, "%s/BAT%d/energy_full", PS_PATH, b);
-   f = fopen(path, "r");
-   
-   if(f == NULL) {
-      sprintf(path, "%s/BAT%d/charge_full", PS_PATH, b);
-      f = fopen(path, "r");
-   }
-  
-   if(f == NULL || fgets(energy_full_s, 32, f) == NULL) {
-      fprintf(stderr, "%scould not read battery energy max: '%s'\n",
-            BAD_MSG, path);
-   }
-   else {
-        energy_full = strtol(energy_full_s, NULL, 10);
-        fclose(f);
     }
 
-   //energy now
-   char energy_now_s[32];
-   long int energy_now = 0;
-   sprintf(path, "%s/BAT%d/energy_now", PS_PATH, b);
-   f = fopen(path, "r");
-  
-   if(f == NULL) {
-      sprintf(path, "%s/BAT%d/charge_now", PS_PATH, b);
-      f = fopen(path, "r");
-   }  
-
-   if(f == NULL || fgets(energy_now_s, 32, f) == NULL) {
-      fprintf(stderr, "%scould not read battery energy now: '%s'\n",
-            BAD_MSG, path);
-   }
-   else {
-        energy_now = strtol(energy_now_s, NULL, 10);
-        fclose(f);
+    if(nmatched != ngroups) {
+      fprintf(stderr, "%sCould not match string: '%s'\n",
+      BAD_MSG, command_output);
     }
 
-   bi->percent = (int)(energy_now * 100 / (double)energy_full);
+    get_match_string(buffer, &groups[1], command_output);
+    bi->index = strtol(buffer, NULL, 10);
+
+    get_match_string(buffer, &groups[2], command_output);
+    bi->status = get_battery_state(buffer);
+
+    get_match_string(buffer, &groups[3], command_output);
+    bi->percent = strtol(buffer, NULL, 10);
+
+    get_match_string(buffer, &groups[4], command_output);
+    strcpy(bi->time_left, buffer);
+
+    regfree(&regex);
+  }
+  pclose(file);
 }
 
 void read_acpi_thermal(int t, struct thermal_info *therm) {
