@@ -223,6 +223,8 @@ struct config {
    struct colour *inviswscol;    //text colour for invisible workspace
    struct colour *groove_light;  //light side of groove overlay
    struct colour *groove_dark;      //dark side of groove overlay
+   struct colour *urgent;        //Urgent workspace colour
+   struct colour *urgent_visible;//Urgent workspace colour when the workspace is visible
    cairo_font_face_t *keyfont;      //main key text font
    double keyfontsize;           //main key text size
    cairo_font_face_t *valfont;      //main value text font

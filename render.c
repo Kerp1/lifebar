@@ -124,9 +124,22 @@ int render_filesystem(cairo_t *c, int x, int y, struct statvfs *fs,
 int render_workspace(cairo_t *cairo, int x, int y,
                 struct i3_workspace *ws, int d) {
 
-   //set colour based on visibility
-   struct colour *c = conf->inviswscol;
-   if(strcmp(ws->visible, "true") == 0) c = conf->viswscol;
+   //set colour based on visibility and urgency
+   struct colour *c = NULL;
+   if(strcmp(ws->visible, "true") == 0) {
+      if(strcmp(ws->urgent, "true") == 0) {
+         c = conf->urgent_visible;
+      } else {
+         c = conf->viswscol;
+      }
+   } else {
+      if(strcmp(ws->urgent, "true") == 0) {
+         c = conf->urgent;
+      } else {
+         c = conf->inviswscol;
+      }
+   }
+
    set_cairo_source_colour(cairo, c);
 
    //set font

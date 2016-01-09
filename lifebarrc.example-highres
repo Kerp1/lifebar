@@ -62,6 +62,10 @@ divcol		"  0,255,170,255"
 viswscol	"140,230,155,255"
 # workspace name text colour when that workspace is not visible
 inviswscol	"120,120,120,255"
+# workspace name text colour when that workspace has a window with the urgent flag and is not visible
+urgent "255,0,0,150"
+# workspace name text colour when that workspace has a window with the urgent flag and is visible
+urgent_visible "255,0,0,255"
 
 # font configuration
 # format is <face>:<weight>:<size> where <weight> is either 'bold' or 'normal'

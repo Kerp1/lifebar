@@ -55,6 +55,8 @@ int main(int argc, char *argv[]) {
       conf->inviswscol = prepare_colour(0, 0, 0, 100);
       conf->groove_dark = prepare_colour(10, 10, 10, 40);
       conf->groove_light = prepare_colour(250, 250, 250, 40);
+      conf->urgent = prepare_colour(255, 0, 0, 150);
+      conf->urgent_visible = prepare_colour(255, 0, 0, 255);
       conf->keyfont = default_font;
       conf->keyfontsize = default_font_size;
       conf->valfont = default_font;
@@ -251,6 +253,12 @@ int main(int argc, char *argv[]) {
                   else if(strcmp(key, "inviswscol") == 0) {
                      struct colour *col = parse_config_colour(value);
                      if(col != NULL) conf->inviswscol = col;
+                  } else if(strcmp(key, "urgent") == 0) {
+                     struct colour *col = parse_config_colour(value);
+                     if(col != NULL) conf->urgent = col;
+                  } else if(strcmp(key, "urgent_visible") == 0) {
+                     struct colour *col = parse_config_colour(value);
+                     if(col != NULL) conf->urgent_visible = col;
                   }
                   else if(strcmp(key, "keyfont") == 0)
                      parse_config_font("keyfont", value);
