@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
       sprintf(confpath, "%s/.config/lifebar/config", getenv("HOME"));
       FILE *cf = fopen(confpath, "r");
       if(cf != NULL) {
-         printf("%susing config file: '~/.config/lifebar/lifebarrc'\n", GOOD_MSG);
+         printf("%susing config file: '~/.config/lifebar/config'\n", GOOD_MSG);
          char line[1024];
          char key[128];
          char value[1024];
