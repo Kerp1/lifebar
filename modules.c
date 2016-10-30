@@ -7,11 +7,11 @@ void check_module_list(struct module *modules) {
    struct module *ptr;
    ptr = modules;
    while(ptr != NULL) {
-      if(!valid_module_suffix(ptr->name, valid_suffix) 
+      if(!valid_module_suffix(ptr->name, valid_suffix)
                               && !valid_module_static(ptr->name, valid_static)) {
          fprintf(stderr, "%sbad value for config key 'modules' -> '%s'\n",
                BAD_MSG, ptr->name);
-      } 
+      }
       ptr = ptr->next;
    }
 }
@@ -35,12 +35,12 @@ int valid_module_suffix(char *module, char **valid_entries) {
    int suffix = 0;
 
    suffix = get_module_suffix(module, valid_entries);
-   if(suffix >= 0) 
+   if(suffix >= 0)
       return 1;
    return 0;
 }
 
-// Returns the module suffix. Example for 
+// Returns the module suffix. Example for
 // bat0 => 0
 // therm1 => 1
 //

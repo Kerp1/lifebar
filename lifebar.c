@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
       conf = (struct config*)malloc(sizeof(struct config));
 
-      cairo_font_face_t *default_font = 
+      cairo_font_face_t *default_font =
          cairo_toy_font_face_create("", CAIRO_FONT_SLANT_NORMAL,
                                  CAIRO_FONT_WEIGHT_NORMAL);
       double default_font_size = 10.0;
@@ -443,7 +443,7 @@ int main(int argc, char *argv[]) {
 
          if(bgp != 0) {
             //grab the section of background image for this instance
-            if(conf->position == TOP) 
+            if(conf->position == TOP)
                ins->bg = XGetImage(d, bgp, ins->output->x, ins->output->y,
                               ins->output->width, conf->depth,
                               XAllPlanes(), ZPixmap);
@@ -518,7 +518,7 @@ int main(int argc, char *argv[]) {
          ins->cairo = cairo_create(ins->cairo_s_bb);
 
          //continue iterating over active outputs
-         output_list = output_list->next; 
+         output_list = output_list->next;
       }
 
       //TODO use the correct default font here
@@ -603,7 +603,7 @@ int main(int argc, char *argv[]) {
                last_expensive = frame_time;
 
                //decrement the alarm
-               if(alarm_s > EXPENSIVE_TIME) 
+               if(alarm_s > EXPENSIVE_TIME)
                   alarm_s -= EXPENSIVE_TIME;
                else if(alarm_s > 0) {
                   //alarm timer has finised
@@ -725,7 +725,7 @@ int main(int argc, char *argv[]) {
             //query i3 for workspace information
             free_workspaces_list(workspaces_list);
             workspaces_list = get_i3_workspaces(i3_sock);
-            
+
             //grab the latest sysinfo struct
             sysinfo(&sinfo);
 
@@ -786,7 +786,7 @@ int main(int argc, char *argv[]) {
                                  //left click switches workspace
                                  char i3_payload[256];
                                  sprintf(i3_payload,
-                                    "workspace %s", 
+                                    "workspace %s",
                                     ins->ws_layout->ws_name[i]);
                                  char *res;
                                  i3_ipc_send(&res, i3_sock, COMMAND,
@@ -829,7 +829,7 @@ int main(int argc, char *argv[]) {
                                     //send the ipc request
                                     char i3_payload[256];
                                     sprintf(i3_payload,
-                                       "workspace %s", 
+                                       "workspace %s",
                                        ins->ws_layout->
                                           ws_name[next_wsi]);
                                     char *res;
@@ -854,7 +854,7 @@ int main(int argc, char *argv[]) {
                               ins->time_layout->x_max) {
 
                            if(mouse_button == 4 ||
-                                    mouse_button == 1) { 
+                                    mouse_button == 1) {
                               //increment alarm
                               alarm_s += conf->alarm_increment_s;
                            }
@@ -882,7 +882,7 @@ int main(int argc, char *argv[]) {
                      set_cairo_source_colour(ins->cairo, conf->tintcol);
                      cairo_paint_with_alpha(ins->cairo, 1.0);
                   }
-                  
+
                   //we overlay the alarm flash or when the only
                   //battery is discharging and low
                   if(frame_time < alarm_activate + 7) {
@@ -939,7 +939,7 @@ int main(int argc, char *argv[]) {
                   ins->ws_layout->ws_name[ws_index][0] = '\0';
 
                // ========= right side =========
-               
+
                   uint32_t trpadding = conf->rpadding;
                   char* module = NULL;
 
@@ -971,7 +971,7 @@ int main(int argc, char *argv[]) {
                         ins->time_layout->x_min =
                         ins->output->width - trpadding;
 
-                        if(ptr->next != NULL) { 
+                        if(ptr->next != NULL) {
                            //divider
                            trpadding += render_divider(ins->cairo,
                                  ins->output->width - trpadding, RIGHT);
@@ -989,13 +989,13 @@ int main(int argc, char *argv[]) {
                         }
                      } else if(strcmp(module, "ifinfo") == 0) {
                         //ifinfo
-                        trpadding += render_interface_info(ins->cairo, 
-                                 ins->output->width - trpadding, 
+                        trpadding += render_interface_info(ins->cairo,
+                                 ins->output->width - trpadding,
                                  textheight, ifone_info, RIGHT);
 
                         if(ptr->next != NULL) {
                            //divider
-                           trpadding += render_divider(ins->cairo, 
+                           trpadding += render_divider(ins->cairo,
                                  ins->output->width - trpadding, RIGHT);
                         }
                      } else if(strcmp(module, "ifone") == 0) {
@@ -1048,7 +1048,7 @@ int main(int argc, char *argv[]) {
                            trpadding += render_filesystem(ins->cairo,
                                  ins->output->width - trpadding,
                                  textheight, &fsone, conf->fsone, RIGHT);
-                        
+
                            if(ptr->next != NULL) {
                               //divider
                               trpadding += render_divider(ins->cairo,
@@ -1061,7 +1061,7 @@ int main(int argc, char *argv[]) {
                            trpadding += render_filesystem(ins->cairo,
                                  ins->output->width - trpadding,
                                  textheight, &fstwo, conf->fstwo, RIGHT);
-                     
+
                            if(ptr->next != NULL) {
                               //divider
                               trpadding += render_divider(ins->cairo,
@@ -1076,7 +1076,7 @@ int main(int argc, char *argv[]) {
                               trpadding += render_battery(ins->cairo,
                                     ins->output->width - trpadding,
                                     textheight, batteries[i], RIGHT);
-                     
+
                               if(ptr->next != NULL) {
                                  //divider
                                  trpadding += render_divider(ins->cairo,
@@ -1091,7 +1091,7 @@ int main(int argc, char *argv[]) {
                               trpadding += render_thermal(ins->cairo,
                                     ins->output->width - trpadding,
                                     textheight, thermals[i], RIGHT);
-                     
+
                               if(ptr->next != NULL) {
                                  //divider
                                  trpadding += render_divider(ins->cairo,
@@ -1100,7 +1100,7 @@ int main(int argc, char *argv[]) {
                            }
                         }
                      } else if(strncmp("volinfo", module, strlen("volinfo")) == 0) {
-                        trpadding += render_volume(ins->cairo, 
+                        trpadding += render_volume(ins->cairo,
                                  ins->output->width - trpadding,
                                  textheight, vol_info, RIGHT);
 

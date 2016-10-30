@@ -17,7 +17,7 @@ iftwo		wlan0
 
 # filesystem paths used for reporting remaining storage capacity
 fsone		/home
-fstwo		/ 
+fstwo		/
 
 # alarm time increment when mouse-wheeling over the time, in seconds
 alarminc	60

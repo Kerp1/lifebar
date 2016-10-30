@@ -83,7 +83,7 @@ void read_acpi_battery(int b, struct batt_info *bi) {
 
     return;
   }
-  
+
   while(fgets(command_output, sizeof(command_output) - 1, file) != NULL) {
     int ret = regexec(&regex, command_output, ngroups, groups, 0);
 
@@ -122,7 +122,7 @@ void read_acpi_battery(int b, struct batt_info *bi) {
 }
 
 void read_acpi_thermal(int t, struct thermal_info *therm) {
-   //save the index 
+   //save the index
    therm->index = t;
 
    //we assume the thermal index to exist as filename thermal_zone<index>
@@ -217,7 +217,7 @@ void read_net_info(char *ifname, struct net_info *net) {
       } else if(strstr(path, "Not connected") != NULL) {
          strncpy(net->name, "Down", 5);
          strncpy(net->signal_level, "0", 2);
-      } 
+      }
    }
    pclose(file);
 }

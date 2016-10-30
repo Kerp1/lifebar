@@ -6,12 +6,12 @@
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License v3 as published
  * by the Free Software Foundation.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -96,7 +96,7 @@
 
 // the valid configuration options for the config key 'modules' which does
 // not have any suffix.
-static char **valid_static = (char *[]){"fsone", "fstwo", "extip", "ifone", 
+static char **valid_static = (char *[]){"fsone", "fstwo", "extip", "ifone",
             "iftwo", "date", "time", "uptime", "ifinfo", "volinfo", NULL};
 
 // the valid configuration options for the config key 'modules' which does

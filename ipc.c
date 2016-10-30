@@ -280,7 +280,7 @@ void get_i3_sockpath(char **ret) {
    }
 
    //we are in the parent
-   
+
    //close writing end of pipe
    close(pipefd[1]);
 
