@@ -560,6 +560,7 @@ int main(int argc, char *argv[]) {
       struct net_speed_info ifone_speed[NET_SPEED_AVERAGE];
       struct net_speed_info iftwo_speed[NET_SPEED_AVERAGE];
       struct net_info ifone_info;
+      int bluetooth_connected = 0;
       uint32_t if_speed_index = 0;
       //TODO we should print these arrays with suitable values or ignore
       //zero values in render_interface(), to prevent extreme values for
@@ -663,6 +664,8 @@ int main(int argc, char *argv[]) {
 
 
                read_net_info(conf->ifinfo, &ifone_info);
+
+               bluetooth_connected = bluetooth_device_connected();
 
                //read interface speed
                if(ifone != NULL)
@@ -994,6 +997,17 @@ int main(int argc, char *argv[]) {
                                  textheight, ifone_info, RIGHT);
 
                         if(ptr->next != NULL) {
+                           //divider
+                           trpadding += render_divider(ins->cairo,
+                                 ins->output->width - trpadding, RIGHT);
+                        }
+                     } else if(strcmp(module, "bluetooth") == 0) {
+                        uint32_t ret = render_bluetooth(ins->cairo,
+                                      ins->output->width - trpadding,
+                                      textheight, bluetooth_connected, RIGHT);
+                        trpadding += ret;
+
+                        if(ptr->next != NULL && ret != 0) {
                            //divider
                            trpadding += render_divider(ins->cairo,
                                  ins->output->width - trpadding, RIGHT);

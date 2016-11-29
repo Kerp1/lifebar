@@ -97,7 +97,7 @@
 // the valid configuration options for the config key 'modules' which does
 // not have any suffix.
 static char **valid_static = (char *[]){"fsone", "fstwo", "extip", "ifone",
-            "iftwo", "date", "time", "uptime", "ifinfo", "volinfo", NULL};
+            "iftwo", "date", "time", "uptime", "ifinfo", "volinfo", "bluetooth", NULL};
 
 // the valid configuration options for the config key 'modules' which does
 // have a suffix like bat0 or therm1.
@@ -312,6 +312,8 @@ int render_thermal(cairo_t *, int, int, struct thermal_info *, int);
 
 int render_keyvalue(cairo_t *, int, int, char *, char *, int);
 
+int render_bluetooth(cairo_t *c, int x, int y, int connected, int d);
+
 void read_net_speed(char *, struct net_speed_info *);
 
 void read_net_info(char *, struct net_info *);
@@ -319,3 +321,5 @@ void read_net_info(char *, struct net_info *);
 size_t curl_writeback(void *, size_t, size_t, void *);
 
 void get_alsa_master_info(struct volume_info *);
+
+int bluetooth_device_connected();

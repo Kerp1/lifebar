@@ -8,6 +8,35 @@
 #define TH_PATH "/sys/class/thermal"
 #define NET_PATH "/sys/class/net"
 
+
+int bluetooth_device_connected() {
+  char cmd[] = "hcitool con";
+  char command_output[512];;
+  int is_connnected = 0;
+
+  FILE *file;
+  regex_t regex;
+  regcomp(&regex, ".*?> ACL.+?", REG_EXTENDED);
+  file = popen(cmd, "r");
+  if(file == NULL) {
+    fprintf(stderr, "%sCouldn't execute hcitool command\n", BAD_MSG, NULL);
+    return is_connnected;
+  }
+
+  while(fgets(command_output, sizeof(command_output) - 1, file) != NULL) {
+    int result = regexec(&regex, command_output, 0, NULL, 0);
+
+    if(result != REG_NOMATCH) {
+      is_connnected = 1;
+      break;
+    }
+  }
+  regfree(&regex);
+  pclose(file);
+
+  return is_connnected;
+}
+
 int count_acpi_batteries() {
    DIR *d;
    struct dirent *de;

@@ -160,6 +160,20 @@ int render_workspace(cairo_t *cairo, int x, int y,
    return extents.width + 2;
 }
 
+int render_bluetooth(cairo_t *c, int x, int y, int connected, int d) {
+   if(!connected) {
+      return 0;
+   }
+
+   char k_string[32];
+   char v_string[32];
+
+   sprintf(k_string, "Bluetooth: ");
+   sprintf(v_string, "Connected");
+
+   return render_keyvalue(c, x, y, k_string, v_string, d);
+}
+
 int render_interface_info(cairo_t *c, int x, int y,
                   struct net_info net, int d) {
    char k_string[32];
